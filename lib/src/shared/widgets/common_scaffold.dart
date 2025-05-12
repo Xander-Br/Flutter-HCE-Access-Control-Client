@@ -16,8 +16,11 @@ class _CommonScaffoldState extends State<CommonScaffold> {
     if (location == AppRoutes.home) {
       return 0;
     }
-    if (location == AppRoutes.settings) {
+    if (location == AppRoutes.card) {
       return 1;
+    }
+    if (location == AppRoutes.settings) {
+      return 2;
     }
     return 0; // Default to home
   }
@@ -28,6 +31,9 @@ class _CommonScaffoldState extends State<CommonScaffold> {
         GoRouter.of(context).go(AppRoutes.home);
         break;
       case 1:
+        GoRouter.of(context).go(AppRoutes.card);
+        break;
+      case 2:
         GoRouter.of(context).go(AppRoutes.settings);
         break;
     }
@@ -43,6 +49,11 @@ class _CommonScaffoldState extends State<CommonScaffold> {
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.credit_card_outlined),
+            activeIcon: Icon(Icons.credit_card),
+            label: 'Card',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings_outlined),

@@ -14,8 +14,9 @@ A Flutter Proof-Of-Concept demonstrating the use of TOTP with NFC HCE on a mobil
 The application follows a feature-driven development approach to separate concerns, focus on essentials, and facilitate easier testing of individual components.
 
 These features are implemented in this application, reflecting the user stories:
-- `auth` (Authentication)
+- `auth` (Authentication) (Usage is questionned)
 - `hce` (Host Card Emulation / NFC interaction)
+- `access_card` (Access Card Management)
 
 Material 3 is used as the UI library for its ease of rapid prototyping, cohesive design system, and adherence to defined UI/UX guidelines. A `shared` folder is utilized to house reusable widgets accessible across different features.
 

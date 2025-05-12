@@ -1,8 +1,8 @@
 class AppRoutes {
   static const String home = '/';
   static const String settings = '/settings';
-  static const String itemDetails = 'item/:id'; // Example of a sub-route or route with parameter
+  static const String card = '/card';
+  static const String cardDetails = '/card/:id'; 
 
-  // For named routes with parameters, you might want helper functions:
-  static String itemDetailsPath(String id) => '/item/$id';
+  static String cardDetailsPath(String id) => '/card/$id'; // Helper method to generate path
 }

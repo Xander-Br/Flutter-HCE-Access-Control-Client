@@ -5,7 +5,6 @@ import 'package:sicpa/src/core/app_theme.dart';
 import 'package:sicpa/src/features/settings/presentation/providers/settings_providers.dart';
 
 void main() {
-  // runApp(const MyApp()); // For simple apps without Riverpod at the root
   runApp(
     const ProviderScope( // Wrap with ProviderScope for Riverpod
       child: MyApp(),

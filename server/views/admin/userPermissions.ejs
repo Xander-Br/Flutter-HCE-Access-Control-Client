@@ -1,0 +1,30 @@
+<%- include('../partials/header', { title: title }) %>
+
+<h1><%= title %></h1>
+<p>Select the permissions to grant to user: <strong><%= user.username %></strong>.</p>
+
+<% if (allPermissions.length > 0) { %>
+<form action="/admin/users/<%= user.id %>/permissions" method="POST">
+  <div class="list-group mb-3">
+    <% allPermissions.forEach(permission => { %>
+      <label class="list-group-item">
+        <input class="form-check-input me-1" type="checkbox" name="permissionIds" value="<%= permission.id %>"
+          <% if (userPermissionIds.includes(permission.id)) { %>checked<% } %>>
+        <strong><%= permission.name %></strong>
+        <% if (permission.description) { %>
+          <small class="d-block text-muted"><%= permission.description %></small>
+        <% } %>
+      </label>
+    <% }); %>
+  </div>
+  <button type="submit" class="btn btn-primary">Save Permissions</button>
+  <a href="/admin/users" class="btn btn-secondary">Back to Users</a>
+</form>
+<% } else { %>
+  <p class="text-muted">No permissions have been defined in the system yet.
+    <a href="/admin/permissions/add">Add permissions first</a>.
+  </p>
+  <a href="/admin/users" class="btn btn-secondary">Back to Users</a>
+<% } %>
+
+<%- include('../partials/footer') %>

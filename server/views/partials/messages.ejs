@@ -1,0 +1,21 @@
+<% if (locals.error && typeof error === 'string') { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= error %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+  
+  <% if (locals.success && typeof success === 'string') { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= success %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+  
+  <% if (session && session.message) { %>
+    <div class="alert alert-<%= session.message.type === 'error' ? 'danger' : session.message.type %> alert-dismissible fade show" role="alert">
+      <%= session.message.text %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <% delete session.message; %>
+  <% } %>

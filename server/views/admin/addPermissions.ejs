@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title: title }) %>
+
+<h1><%= title %></h1>
+<p>Define a new permission that can be assigned to users (e.g., `access_zone_a`, `use_equipment_x`).</p>
+
+<form action="/admin/permissions/add" method="POST">
+  <div class="mb-3">
+    <label for="name" class="form-label">Permission Name</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="e.g., access_main_entrance" required>
+    <div class="form-text">A unique identifier for the permission (use underscores, no spaces).</div>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description (Optional)</label>
+    <textarea class="form-control" id="description" name="description" rows="3" placeholder="e.g., Allows entry through the main entrance during business hours."></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Add Permission</button>
+  <a href="/admin/permissions" class="btn btn-secondary">Cancel</a>
+</form>
+
+<%- include('../partials/footer') %>

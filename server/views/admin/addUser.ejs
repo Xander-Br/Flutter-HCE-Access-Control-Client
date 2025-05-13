@@ -1,0 +1,37 @@
+<%- include('../partials/header', { title: title }) %>
+
+<h1><%= title %></h1>
+<p>Create a new user. A TOTP secret and QR code will be generated for them to set up their authenticator app.</p>
+
+<form action="/admin/users/add" method="POST" class="mb-4">
+  <div class="mb-3">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" class="form-control" id="username" name="username" required>
+     <div class="form-text">This username will be used by the user in their authenticator app.</div>
+  </div>
+  <button type="submit" class="btn btn-primary">Add User & Generate QR</button>
+  <a href="/admin/users" class="btn btn-secondary">Cancel</a>
+</form>
+
+<% if (locals.qrCodeUrl) { %>
+  <div class="mt-4 p-3 border rounded">
+    <h4>User "<%= addedUsername %>" Added Successfully!</h4>
+    <p>Instruct the user to scan the QR code below with their preferred TOTP authenticator app (e.g., Google Authenticator, Authy, Microsoft Authenticator).</p>
+    <div class="text-center mb-3">
+      <img src="<%= qrCodeUrl %>" alt="TOTP QR Code for <%= addedUsername %>" class="img-fluid" style="max-width: 250px; border: 1px solid #ccc;">
+    </div>
+    <p><strong>Important:</strong> This QR code will only be shown once. Ensure the user scans it now.</p>
+    <% if (locals.totpSecret) { %>
+      <p>
+        <small>If QR code scanning is not possible, the user can manually enter the following secret key:
+          <br><strong><code><%= totpSecret %></code></strong>
+        </small>
+      </p>
+    <% } %>
+    <a href="/admin/users/add" class="btn btn-success mt-2">Add Another User</a>
+    <a href="/admin/users" class="btn btn-info mt-2">View All Users</a>
+  </div>
+<% } %>
+
+
+<%- include('../partials/footer') %>

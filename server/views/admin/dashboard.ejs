@@ -1,0 +1,38 @@
+<%- include('../partials/header', { title: title }) %>
+
+<h1>Welcome to the Admin Dashboard, <%= adminUsername %>!</h1>
+<p>This is the central hub for managing users and their access permissions for the Flutter HCE Access Control POC.</p>
+
+<div class="row mt-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">User Management</h5>
+        <p class="card-text">Add new users, view existing users, and manage their TOTP setup for access card emulation.</p>
+        <a href="/admin/users" class="btn btn-primary">Manage Users</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Permission Management</h5>
+        <p class="card-text">Define access permissions (e.g., for different zones or functionalities) that can be assigned to users.</p>
+        <a href="/admin/permissions" class="btn btn-info">Manage Permissions</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-5">
+    <h4>System Overview</h4>
+    <ul>
+        <li><strong>User Authentication:</strong> Users do not log into this panel. Instead, admins create users and generate a TOTP secret.</li>
+        <li><strong>TOTP Setup:</strong> The generated TOTP secret is displayed as a QR code. The end-user scans this with the Flutter Mobile App.</li>
+        <li><strong>Access Card Emulation:</strong> The mobile application (Flutter PoC) will use the TOTP to emulate an access card via NFC HCE.</li>
+        <li><strong>Access Verification:</strong> Physical infrastructure (e.g., NFC readers) would communicate with the `/api/authenticate-totp` endpoint of this server to verify the TOTP presented by the mobile app.</li>
+        <li><strong>Permissions:</strong> Permissions defined here can be checked via the `/api/check-permission` endpoint to control access to specific zones or resources based on the authenticated user.</li>
+    </ul>
+</div>
+
+<%- include('../partials/footer') %>

@@ -23,3 +23,4 @@ Material 3 is used as the UI library for its ease of rapid prototyping, cohesive
 Riverpod is selected for state management due to personal familiarity, strong community support, and extensive maintenance.
 
 GoRouter has been chosen for routing as it aligns with the aforementioned architectural and development principles.
+

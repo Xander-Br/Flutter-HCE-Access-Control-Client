@@ -13,24 +13,25 @@ class QrScannerProviders extends StateNotifier<String?> {
   }
 }
 
-final qrScannerProvider =
+
+final qrScannerStateProvider =
     StateNotifierProvider<QrScannerProviders, String?>((ref) {
   return QrScannerProviders();
 });
 
 final mobileScannerControllerProvider = Provider.autoDispose<MobileScannerController>((ref) {
   final controller = MobileScannerController(
-    // detectionSpeed: DetectionSpeed.noDuplicates, 
+    detectionSpeed: DetectionSpeed.noDuplicates, 
     // facing: CameraFacing.back,
     // torchEnabled: false,
+    // detectionTimeoutMs: 1000, // Optional: Adjust if needed
   );
 
   ref.onDispose(() {
-    print("Disposing MobileScannerController"); 
+    print("Disposing MobileScannerController for AddCardScreen");
+    // Controller's dispose method should handle stopping the camera if active.
     controller.dispose();
   });
-
-  
 
   return controller;
 });

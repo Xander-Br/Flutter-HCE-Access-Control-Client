@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:sicpa/src/features/access_card/presentation/providers/qr_scanner_providers.dart';
+import 'package:sicpa/src/features/access_card/presentation/providers/totp_list_notifier.dart'; // Assuming this provides totpListProvider
 
+// QROverlayPainter remains the same as you provided
 class QROverlayPainter extends CustomPainter {
   final double scanWindowSize;
   final double borderRadius;
@@ -56,43 +58,142 @@ class QROverlayPainter extends CustomPainter {
   }
 }
 
-class AddCardScreen extends ConsumerWidget {
+
+class AddCardScreen extends ConsumerStatefulWidget {
   const AddCardScreen({super.key});
-  
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AddCardScreen> createState() => _AddCardScreenState();
+}
+
+class _AddCardScreenState extends ConsumerState<AddCardScreen> {
+  bool _isProcessing = false;
+
+  @override
+  Widget build(BuildContext context) {
     final qrScannerController = ref.watch(mobileScannerControllerProvider);
-    final qrScannerState = ref.watch(qrScannerProvider);
+    final qrScannerDisplayState = ref.watch(qrScannerStateProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Card'),
+        title: const Text('Add New Card'),
       ),
       body: Stack(
         children: [
           MobileScanner(
-            controller: qrScannerController, 
-            onDetect: (capture) {
+            controller: qrScannerController,
+            onDetect: (capture) async {
+              if (_isProcessing) return;
+
               final List<Barcode> barcodes = capture.barcodes;
               if (barcodes.isNotEmpty) {
                 final String? code = barcodes.first.rawValue;
                 if (code != null && code.isNotEmpty) {
-                  ref.read(qrScannerProvider.notifier).setQrCode(code);
+                  // Indicate processing has started
+                  setState(() {
+                    _isProcessing = true;
+                  });
+
+                  // Stop the camera to prevent further scans while processing
+                  try {
+                    await qrScannerController.stop();
+                  } catch (e) {
+                    print("Error stopping scanner: $e");
+                    
+                  }
+
+                  ref.read(qrScannerStateProvider.notifier).setQrCode(code);
+
+                  try {
+                    // Attempt to add the TOTP
+                    await ref.read(totpListProvider.notifier).addTotp(code);
+
+                    if (!mounted) return; // Check if widget is still in the tree
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Card added successfully!'),
+                        backgroundColor: Colors.green,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    Navigator.of(context).pop(); // Close screen on success
+
+                  } catch (e) { // Handle errors from addTotp
+                    if (!mounted) return;
+
+                    String errorMessage = 'Failed to add card.';
+                    if (e is FormatException) {
+                      errorMessage = 'Invalid QR code format: ${e.message}';
+                    } else {
+                      errorMessage = 'Error: ${e.toString()}';
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(errorMessage),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
+                    Navigator.of(context).pop(); // Close screen on error
+                    // Error occurred, allow scanning again
+                    if (mounted) {
+                      setState(() {
+                        _isProcessing = false;
+                      });
+                      // Restart the scanner so the user can try again
+                      try {
+                        await qrScannerController.start();
+                      } catch (startError) {
+                        print("Error restarting scanner: $startError");
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Scanner error. Please go back and try again.'),
+                              backgroundColor: Colors.red,
+                              duration: Duration(seconds: 3),
+                            ),
+                          );
+                        }
+                      }
+                    }
+                  }
+                  // Note: _isProcessing is reset only in the error path above.
+                  // On success, the screen is popped, so resetting it for this instance isn't necessary.
                 }
               }
             },
           ),
-          // QR Code Scanner Overlay
           CustomPaint(
             painter: QROverlayPainter(
-              scanWindowSize: MediaQuery.of(context).size.width * 0.7, 
+              scanWindowSize: MediaQuery.of(context).size.width * 0.7,
               borderRadius: 12.0,
-              borderColor: Colors.tealAccent,
+              borderColor: _isProcessing ? Colors.grey : Colors.tealAccent, // Visual feedback
               borderWidth: 3.0,
             ),
-            child: SizedBox.expand(), 
+            child: const SizedBox.expand(),
           ),
-          if (qrScannerState != null && qrScannerState.isNotEmpty)
+          if (_isProcessing) // Show a processing indicator
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(color: Colors.white),
+                    SizedBox(height: 10),
+                    Text('Processing...', style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
+            ),
+          if (qrScannerDisplayState != null && qrScannerDisplayState.isNotEmpty && !_isProcessing)
             Positioned(
+              // ... (rest of your scanned data display widget)
               bottom: 40,
               left: 20,
               right: 20,
@@ -103,7 +204,7 @@ class AddCardScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  'Scanned Code: $qrScannerState',
+                  'Scanned: $qrScannerDisplayState',
                   style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                   maxLines: 3,

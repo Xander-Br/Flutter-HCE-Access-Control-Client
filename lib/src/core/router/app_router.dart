@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sicpa/src/features/access_card/presentation/screens/add_card_screen.dart';
 import 'package:sicpa/src/features/access_card/presentation/screens/card_list_screen.dart';
 import 'package:sicpa/src/features/home/presentation/screens/home_screen.dart';
 import 'package:sicpa/src/features/settings/presentation/screens/settings_screen.dart';
@@ -36,6 +37,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.card,
             name: AppRoutes.card,
             builder: (context, state) => const CardListScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.addCard,
+            name: AppRoutes.addCard,
+            builder: (context, state) => const AddCardScreen(),
           ),
           GoRoute(
             path: AppRoutes.settings,

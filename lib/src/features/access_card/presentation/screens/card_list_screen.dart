@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sicpa/src/core/router/app_routes.dart';
 import 'package:sicpa/src/features/access_card/presentation/widgets/card_widget.dart';
 
 class CardListScreen extends ConsumerWidget{
@@ -35,6 +37,7 @@ class CardListScreen extends ConsumerWidget{
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          GoRouter.of(context).push(AppRoutes.addCard);
         },
         tooltip: 'Add Card',
         child: const Icon(Icons.add),

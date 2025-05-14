@@ -24,3 +24,14 @@ Riverpod is selected for state management due to personal familiarity, strong co
 
 GoRouter has been chosen for routing as it aligns with the aforementioned architectural and development principles.
 
+## Server
+
+I used a express js server with bootstrap 5 to implement admin authentication and user generation with qr code and permissions management for the user so the admin can create new zone and attribute them to the user.
+
+## TODO
+- Fix duplication issue in TOTP storage []
+- When clicked on a card it should show the current otp code []
+- Implement HCE when card is selected []
+- Deleted Card []
+- Fix in server the permission management []
+- Remove boilerplate code []

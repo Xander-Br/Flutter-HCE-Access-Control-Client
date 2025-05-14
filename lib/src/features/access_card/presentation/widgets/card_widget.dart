@@ -19,14 +19,13 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine text color based on background color's luminance for better contrast
     final textColor = cardColor.computeLuminance() > 0.4 ? Colors.black87 : Colors.white;
     final subTextColor = cardColor.computeLuminance() > 0.4 ? Colors.black54 : Colors.white70;
 
     return InkWell(
       onTap: onTap,
       onLongPress: onLongPress,
-      borderRadius: BorderRadius.circular(12.0), // Match decoration
+      borderRadius: BorderRadius.circular(12.0), 
       child: Container(
         width: double.infinity, // Make card take available width
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -66,11 +65,10 @@ class CardWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ],
-            // You can add TOTP code display here later
-            // For example, a placeholder for where the 6-digit code would go
+            
             const SizedBox(height: 12),
             Text(
-              "••• •••", // Placeholder for actual TOTP code
+              "••• •••", 
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,

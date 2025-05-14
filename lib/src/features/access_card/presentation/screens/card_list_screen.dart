@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sicpa/src/core/router/app_routes.dart';
-import 'package:sicpa/src/features/access_card/models/totp_model.dart'; // Your model
+import 'package:sicpa/src/features/access_card/models/totp_model.dart';
 import 'package:sicpa/src/features/access_card/presentation/widgets/card_widget.dart';
-// Import your providers and color helper
 import 'package:sicpa/src/features/access_card/presentation/providers/totp_list_notifier.dart'; 
-// Assuming generateCardColorForItem is in a utils file or here
-// Color generateCardColorForItem(TotpModel item, {int shadeValue = 400}) { ... }
+
 
 
 class CardListScreen extends ConsumerWidget {
@@ -55,8 +53,7 @@ class CardListScreen extends ConsumerWidget {
                     label: const Text('Add Card'),
                     onPressed: () {
                        GoRouter.of(context).push(AppRoutes.addCard).then((_) {
-                        // After returning from add card screen, refresh the list
-                        // to see new cards immediately.
+                       
                         ref.read(totpListProvider.notifier).refresh();
                       });
                     },
@@ -73,18 +70,14 @@ class CardListScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final item = totpItems[index];
                 return CardWidget(
-                  // Use accountName for the main name, issuer as domain/company
                   name: item.accountName.isNotEmpty ? item.accountName : (item.issuer.isNotEmpty ? item.issuer : "Unnamed Account"),
                   domain: item.accountName.isNotEmpty && item.issuer.isNotEmpty ? item.issuer : "",
                   cardColor: generateCardColorForItem(item, shadeValue: Theme.of(context).brightness == Brightness.dark ? 500 : 400),
                   onTap: () {
-                    // Handle card tap, e.g., navigate to a detail screen
-                    // print('Tapped on ${item.issuer} - ${item.accountName}');
-                    // GoRouter.of(context).push('${AppRoutes.cardDetail}/${item.id}');
+                  
                   },
                   onLongPress: () {
-                    // Implement delete confirmation dialog
-                    // showDeleteConfirmationDialog(context, ref, item);
+                    
                   }
                 );
               },
@@ -114,8 +107,7 @@ class CardListScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           GoRouter.of(context).push(AppRoutes.addCard).then((_) {
-            // After returning from add card screen, refresh the list
-            // to see new cards immediately.
+            
             ref.read(totpListProvider.notifier).refresh();
           });
         },
@@ -125,37 +117,6 @@ class CardListScreen extends ConsumerWidget {
       ),
     );
   }
-
-  
-
-  // Example for a delete confirmation (optional, you'd need to implement it fully)
-  // void showDeleteConfirmationDialog(BuildContext context, WidgetRef ref, TotpModel item) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext dialogContext) {
-  //       return AlertDialog(
-  //         title: const Text('Delete Card?'),
-  //         content: Text('Are you sure you want to delete the card for "${item.accountName} (${item.issuer})"? This action cannot be undone.'),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: const Text('Cancel'),
-  //             onPressed: () {
-  //               Navigator.of(dialogContext).pop();
-  //             },
-  //           ),
-  //           TextButton(
-  //             style: TextButton.styleFrom(foregroundColor: Colors.red),
-  //             child: const Text('Delete'),
-  //             onPressed: () {
-  //               // ref.read(totpListProvider.notifier).deleteTotp(item.id); // Assuming you add deleteTotp to notifier
-  //               Navigator.of(dialogContext).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 }
 
 
@@ -163,14 +124,13 @@ Color generateCardColorForItem(TotpModel item, {int shadeValue = 400}) {
   final List<MaterialColor> colorPalettes = [
     Colors.red, Colors.pink, Colors.purple, Colors.deepPurple,
     Colors.indigo, Colors.blue, Colors.lightBlue, Colors.cyan,
-    Colors.teal, Colors.green, Colors.lightGreen, Colors.orange, // Removed lime, yellow for better contrast with shade400
+    Colors.teal, Colors.green, Colors.lightGreen, Colors.orange, 
     Colors.deepOrange, Colors.brown, Colors.blueGrey, Colors.amber,
   ];
 
-  final int hashCode = item.id.hashCode; // Use a stable property of the item
+  final int hashCode = item.id.hashCode;
   final color = colorPalettes[hashCode.abs() % colorPalettes.length];
   
-  // Ensure the shade exists, fallback if necessary
   switch (shadeValue) {
     case 100: return color.shade100;
     case 200: return color.shade200;
